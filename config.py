@@ -7,3 +7,8 @@ class Config(object):
     CSFR_ENABLED = True
     SECRET_KEY = 'secret_key'
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+
+
+class DevelopmentConfig(Config):
+    DEVELOPMENT = True
+    DEBUG = True
