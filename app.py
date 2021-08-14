@@ -2,12 +2,14 @@ from flask import Flask, request
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from config import Config
+
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
+from models import db
+db.init_app(app)
 migrate = Migrate(app, db)
 
 
