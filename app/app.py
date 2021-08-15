@@ -8,9 +8,9 @@ from config import Config
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 
-from models import db
-db.init_app(app)
-migrate = Migrate(app, db)
+from . import models
+models.db.init_app(app)
+migrate = Migrate(app, models.db)
 
 
 @app.route("/")
