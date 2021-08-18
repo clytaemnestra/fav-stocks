@@ -8,6 +8,7 @@ class Account(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     hash = db.Column(db.Integer(), nullable=False)
     cash = db.Column(db.Integer())
+    balance = db.Column(db.Integer())
 
 
 class TransactionType(db.Model):
