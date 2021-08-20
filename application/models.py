@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import enum
 
 db = SQLAlchemy()
 
@@ -11,9 +12,14 @@ class Account(db.Model):
     balance = db.Column(db.Integer())
 
 
+class TransactionTypesPostgresEnum(enum.Enum):
+    BUY = 'buy'
+    SELL = 'sell'
+
+
 class TransactionType(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
+    id = db.Column(db.Integer(), primary_key=True)
+    type = db.Column(db.Enum(TransactionTypesPostgresEnum), nullable=False)
 
 
 class Stock(db.Model):
@@ -24,7 +30,16 @@ class Stock(db.Model):
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.TIMESTAMP, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
     account_id = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey(Stock.id), nullable=False)
-    time = db.Column(db.TIMESTAMP, nullable=False)
-    transaction_id = (db.Integer, db.ForeignKey(TransactionType.id))
+    transaction_type_id = (db.Integer, db.ForeignKey(TransactionType.id))
+
+
+class Ownership(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    account_id = db.Column(db.Integer, db.ForeignKey(Account.id))
+    stock_id = db.Column(db.Integer, db.ForeignKey(Stock.id))
+    amount = db.Column(db.Integer, nullable=False)
+
