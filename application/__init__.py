@@ -1,6 +1,7 @@
 from flask import Flask
 import os
 from flask_migrate import Migrate
+from .views import page_not_found
 
 
 def create_app():
@@ -8,14 +9,16 @@ def create_app():
     Creates factory function for application.
     https://flask.palletsprojects.com/en/2.0.x/patterns/appfactories/
     """
-    app = Flask(__name__)
-    app.config.from_object(os.environ['APP_SETTINGS'])
+    application = Flask(__name__, template_folder='templates')
+    application.config.from_object(os.environ['APP_SETTINGS'])
+    application.register_error_handler(404, page_not_found)
 
     from .models import db
-    db.init_app(app)
-    migrate = Migrate(app, db)
+    db.init_app(application)
+    # migrate = Migrate(app, db)
 
-    from application.views import api
-    app.register_blueprint(api)
+    from application.views import app
+    application.register_blueprint(app)
 
-    return app
+    return application
+
