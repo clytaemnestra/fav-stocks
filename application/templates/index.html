@@ -1,1 +1,23 @@
-<p>hi</p>
+{% extends "layout.html" %}
+
+{% block title %}
+    Overview
+{% endblock %}
+
+{% block main %}
+<table>
+<tr>
+    <th>Stock</th>
+    <th>Price Per Stock</th>
+    <th>Amount</th>
+</tr>
+{% for owned_stock in owned_stocks %}
+    <tr>
+        <td>{{ owned_stock['name'] }}</td>
+        <td>{{ owned_stock['price'] }}</td>
+        <td>{{ owned_stock['amount'] }}</td>
+
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

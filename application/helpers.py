@@ -1,5 +1,7 @@
 from functools import wraps
 from flask import g, request, redirect, url_for
+import re
+from .models import Account
 
 
 def login_required(f):
@@ -12,4 +14,33 @@ def login_required(f):
         if g.user is None:
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
+
     return decorated_function
+
+
+def check_password_requirements(password, confirmation):
+    """Checks if password satisfies requirements."""
+    if password == confirmation \
+            and re.search("[A-Z]", password) \
+            and re.search("[0-9]", password) \
+            and len(password) > 8:
+        return True
+    else:
+        return False
+
+
+def empty_input(username, password, confirmation):
+    """Checks if user entered credentials."""
+    if not username or not password or not confirmation:
+        return True
+    else:
+        return False
+
+
+def user_exists(username):
+    """Checks if user already exists."""
+    user = Account.query.filter(Account.username == username).all()
+    if len(user) == 1:
+        return True
+    else:
+        return False

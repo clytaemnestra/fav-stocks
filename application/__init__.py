@@ -15,7 +15,7 @@ def create_app():
 
     from .models import db
     db.init_app(application)
-    # migrate = Migrate(app, db)
+    migrate = Migrate(application, db)
 
     from application.views import app
     application.register_blueprint(app)

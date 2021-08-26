@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    hash = db.Column(db.Integer(), nullable=False)
+    hash = db.Column(db.String(120), nullable=False)
     cash = db.Column(db.Integer())
     balance = db.Column(db.Integer())
 
@@ -19,7 +19,7 @@ class TransactionTypesPostgresEnum(enum.Enum):
 
 class TransactionType(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    type = db.Column(db.Enum(TransactionTypesPostgresEnum), nullable=False)
+    type = db.Column(db.Enum(TransactionTypesPostgresEnum, create_type=False), nullable=False)
 
 
 class Stock(db.Model):
