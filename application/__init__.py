@@ -2,6 +2,7 @@ from flask import Flask
 import os
 from flask_migrate import Migrate
 from .views import page_not_found
+from config import *
 
 
 def create_app():

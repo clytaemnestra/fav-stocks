@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, flash
 from .helpers import *
 from sqlalchemy.sql import select
 from .models import Account, db
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 
 logging.basicConfig()
@@ -34,9 +34,6 @@ def register_user():
         username = request.form.get('username')
         confirmation = request.form.get('confirmation')
         password = request.form.get('password')
-        print(username)
-        print(confirmation)
-        print(password)
 
         # in case of empty input
         if not username or not password or not confirmation:
@@ -63,17 +60,43 @@ def register_user():
             except Exception as e:
                 db.session.rollback()
                 print(str(e))
-        return redirect("/")
+        return redirect("/login")
     else:
         return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Logs user in, by remembering his username within the session"""
     if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+        hash = db.session.query(Account.hash).filter(Account.username == username).limit(1).all()
+
         # in case of empty input
         if not username or not password:
             flash("Please fill in all required fields.")
             return render_template("login.html"), 400
+
+        # check if user already exists
+        elif not user_exists(username=username):
+            flash("User doesn't exist. Please register first.")
+            return render_template("register.html"), 403
+
+        elif not check_password_hash(hash[0]["hash"], password):
+            flash("Invalid password"), 403
+            print("pw:", password)
+            print("hash", hash)
+            return render_template("login.html")
+        else:
+            session["user_id"] = username
+            return redirect("/")
     else:
         return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """Logs user out."""
+    session.clear()
+    return redirect("/login")
