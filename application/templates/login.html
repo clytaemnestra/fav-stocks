@@ -4,21 +4,14 @@
     Log In
 {% endblock %}
 
-{% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
-{% endif %}
-
 {% block main %}
-    <form action="/register" method="post">
+    <form action="/login" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
         </div>
         <div class="form-group">
             <input class="form-control" name="password" placeholder="Password" type="password">
         </div>
-        <div class="form-group">
-            <input class="form-control" name="confirmation" placeholder="Repeat password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Register</button>
+        <button class="btn btn-primary" type="submit">Log In</button>
     </form>
 {% endblock %}

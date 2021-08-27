@@ -29,14 +29,6 @@ def check_password_requirements(password, confirmation):
         return False
 
 
-def empty_input(username, password, confirmation):
-    """Checks if user entered credentials."""
-    if not username or not password or not confirmation:
-        return True
-    else:
-        return False
-
-
 def user_exists(username):
     """Checks if user already exists."""
     user = Account.query.filter(Account.username == username).all()

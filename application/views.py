@@ -39,7 +39,7 @@ def register_user():
         print(password)
 
         # in case of empty input
-        if empty_input(username, password, confirmation):
+        if not username or not password or not confirmation:
             flash("Please fill in all required fields.")
             return render_template("register.html"), 400
 
@@ -55,9 +55,8 @@ def register_user():
 
         else:
             try:
-                counter = 1
                 password_hash = generate_password_hash(password)
-                new_account = Account(id=+counter, username=username, hash=password_hash, cash=10000, balance=10000)
+                new_account = Account(username=username, hash=password_hash, cash=10000, balance=10000)
                 print("user created", username, password_hash)
                 db.session.add(new_account)
                 db.session.commit()
@@ -67,3 +66,14 @@ def register_user():
         return redirect("/")
     else:
         return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        # in case of empty input
+        if not username or not password:
+            flash("Please fill in all required fields.")
+            return render_template("login.html"), 400
+    else:
+        return render_template("login.html")

@@ -5,7 +5,7 @@ db = SQLAlchemy()
 
 
 class Account(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     hash = db.Column(db.String(120), nullable=False)
     cash = db.Column(db.Integer())
