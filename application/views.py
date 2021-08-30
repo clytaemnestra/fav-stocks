@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, session, flash
 from .helpers import *
 from sqlalchemy.sql import select
-from .models import Account, db
+from .models import Account, db, Stock, Ownership
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 
@@ -23,7 +23,7 @@ def index():
     """Show homepage."""
     logged_user = session["user_id"]
     owned_stocks = db.session.query(Stock.name, Stock.price, Ownership.amount) \
-        .filter(Ownership.account_id == logged_user).all()
+        .filter(Account.username == logged_user).all()
     return render_template("index.html", owned_stocks=owned_stocks)
 
 
