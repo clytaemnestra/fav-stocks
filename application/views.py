@@ -52,9 +52,9 @@ def register_user():
 
         else:
             try:
+                # create new account and add it to the database
                 password_hash = generate_password_hash(password)
                 new_account = Account(username=username, hash=password_hash, cash=10000, balance=10000)
-                print("user created", username, password_hash)
                 db.session.add(new_account)
                 db.session.commit()
             except Exception as e:
@@ -62,6 +62,7 @@ def register_user():
                 print(str(e))
         return redirect("/login")
     else:
+        # GET request
         return render_template("register.html")
 
 
@@ -83,6 +84,7 @@ def login():
             flash("User doesn't exist. Please register first.")
             return render_template("register.html"), 403
 
+        # check if password is correct
         elif not check_password_hash(hash[0]["hash"], password):
             flash("Invalid password"), 403
             print("pw:", password)
@@ -90,8 +92,10 @@ def login():
             return render_template("login.html")
         else:
             session["user_id"] = username
+            # logs user in and displays homepage
             return redirect("/")
     else:
+        # GET request
         return render_template("login.html")
 
 
@@ -100,3 +104,56 @@ def logout():
     """Logs user out."""
     session.clear()
     return redirect("/login")
+
+
+@app.route("/buy", methods=["GET", "POST"])
+@login_required
+def buy():
+    if request.method == "POST":
+        stock_symbol = request.form.get("symbol")
+        shares = request.form.get("shares")
+
+        # check if input is empty
+        if not stock_symbol or not shares:
+            flash("Input cannot be empty.", 400)
+            return redirect("/buy")
+
+        # check if user entered a valid number
+        elif int(shares) <= 0:
+            flash("Please enter valid whole number.", 400)
+            print(shares)
+            print(type(shares))
+            return redirect("/buy")
+
+        # check if stock exists
+        elif not stock_exists(stock_symbol):
+            flash("Please enter valid stock symbol.", 400)
+            return redirect("/buy")
+
+        # check if user has enough of remaining balance
+        elif check_remaining_cash(session["user_id"]) < check_stock_price(stock_symbol) * shares:
+            flash("You don't have enough of balance for the given purchase.", 400)
+            return redirect("/buy")
+
+        else:
+            try:
+                # perform purchase
+                amount = check_stock_price(stock_symbol) * shares
+                new_transaction = Transaction(amount=amount, account_id=session["user_id"], stock_id=stock_symbol, transaction_type_id="buy")
+                print("transaction", amount, session["user_id"], stock_symbol)
+                db.session.add(new_transaction)
+                db.session.commit()
+
+                # update users balance
+                updated_amount = check_remaining_cash(session["user_id"] - amount)
+                Account.balance = updated_amount
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(str(e))
+        return redirect("/")
+    else:
+        # GET request
+        return render_template("buy.html")
+
+
