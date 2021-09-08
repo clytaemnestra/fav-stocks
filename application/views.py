@@ -140,7 +140,6 @@ def buy():
                 # perform purchase
                 amount = check_stock_price(stock_symbol) * shares
                 new_transaction = Transaction(amount=amount, account_id=session["user_id"], stock_id=stock_symbol, transaction_type_id="buy")
-                print("transaction", amount, session["user_id"], stock_symbol)
                 db.session.add(new_transaction)
                 db.session.commit()
 
@@ -150,7 +149,6 @@ def buy():
                 db.session.commit()
             except Exception as e:
                 db.session.rollback()
-                print(str(e))
         return redirect("/")
     else:
         # GET request

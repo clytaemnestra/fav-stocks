@@ -22,7 +22,7 @@ class TransactionType(db.Model):
 
 
 class Stock(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Integer(), nullable=False)
 
