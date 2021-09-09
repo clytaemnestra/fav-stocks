@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, session, flash
 from .helpers import *
 from sqlalchemy.sql import select
-from .models import Account, db, Stock, Ownership
+from .models import Account, db, Stock, Ownership, Transaction
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import logging
 
 logging.basicConfig()
@@ -121,8 +122,6 @@ def buy():
         # check if user entered a valid number
         elif int(shares) <= 0:
             flash("Please enter valid whole number.", 400)
-            print(shares)
-            print(type(shares))
             return redirect("/buy")
 
         # check if stock exists
@@ -131,21 +130,26 @@ def buy():
             return redirect("/buy")
 
         # check if user has enough of remaining balance
-        elif check_remaining_cash(session["user_id"]) < check_stock_price(stock_symbol) * shares:
+        elif check_remaining_cash(session["user_id"]) < check_stock_price(stock_symbol) * int(shares):
             flash("You don't have enough of balance for the given purchase.", 400)
             return redirect("/buy")
 
         else:
             try:
                 # perform purchase
-                amount = check_stock_price(stock_symbol) * shares
-                new_transaction = Transaction(amount=amount, account_id=session["user_id"], stock_id=stock_symbol, transaction_type_id="buy")
+                amount = check_stock_price(stock_symbol) * int(shares)
+                account_id = \
+                    db.session.query(Account.id).filter(Account.username == session["user_id"]).limit(1).all()[0][0]
+                stock_id = db.session.query(Stock.id).filter(Stock.name == stock_symbol).limit(1).all()[0][0]
+                new_transaction = \
+                    Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id)
                 db.session.add(new_transaction)
                 db.session.commit()
 
                 # update users balance
-                updated_amount = check_remaining_cash(session["user_id"] - amount)
-                Account.balance = updated_amount
+                updated_amount = check_remaining_cash(session["user_id"]) - amount
+                user = db.session.query(Account).filter(Account.username == session["user_id"]).one()
+                user.balance = updated_amount
                 db.session.commit()
             except Exception as e:
                 db.session.rollback()
@@ -153,5 +157,3 @@ def buy():
     else:
         # GET request
         return render_template("buy.html")
-
-

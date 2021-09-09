@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import g, request, redirect, url_for, session
 import re
-from .models import Account, Stock
+from .models import Account, Stock, db
 
 
 def login_required(f):
@@ -50,11 +50,13 @@ def stock_exists(stock_symbol):
 
 def check_remaining_cash(username):
     """Checks how much of cash user has."""
-    remaining_cash = db.session.query(Account.balance).filter(Account.username == username).all()
-    return remaining_cash
+    remaining_cash = db.session.query(Account.balance).filter(Account.username == username).limit(1).all()
+    remaining_cash_int = int(remaining_cash[0][0])
+    return remaining_cash_int
 
 
 def check_stock_price(stock):
     """Checks stock price."""
-    stock_price = db.session.query(Stock.price).filter(Stock.name == stock).all()
-    return stock_price
+    stock_price = db.session.query(Stock.price).filter(Stock.name == stock).limit(1).all()
+    stock_price_int = int(stock_price[0][0])
+    return stock_price_int
