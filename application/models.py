@@ -8,7 +8,7 @@ class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     hash = db.Column(db.String(120), nullable=False)
-    balance = db.Column(db.Integer())
+    balance = db.Column(db.Numeric())
 
 
 class TransactionTypesPostgresEnum(enum.Enum):
@@ -24,7 +24,7 @@ class TransactionType(db.Model):
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
-    price = db.Column(db.Integer(), nullable=False)
+    price = db.Column(db.Numeric(), nullable=False)
 
 
 class Transaction(db.Model):

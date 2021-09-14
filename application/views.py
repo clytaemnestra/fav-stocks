@@ -23,9 +23,13 @@ def page_not_found(e):
 def index():
     """Show homepage."""
     logged_user = session["user_id"]
-    owned_stocks = db.session.query(Stock.name, Stock.price, Ownership.amount) \
-        .filter(Account.username == logged_user).all()
-    return render_template("index.html", owned_stocks=owned_stocks)
+    # owned_stocks = db.session.query(Stock.name, Stock.price, Ownership.amount) \
+    #     .join(Ownership.stock_id == Stock.id) \
+    #     .join(Ownership.account_id == Account.id) \
+    #     .filter(Account.username == logged_user) \
+    #     .all()
+    # owned_stocks = Transaction.query.outerjoin(Ownership, and_())
+    return render_template("index.html")  # , owned_stocks=owned_stocks)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -55,7 +59,7 @@ def register_user():
             try:
                 # create new account and add it to the database
                 password_hash = generate_password_hash(password)
-                new_account = Account(username=username, hash=password_hash, cash=10000, balance=10000)
+                new_account = Account(username=username, hash=password_hash, balance=10000)
                 db.session.add(new_account)
                 db.session.commit()
             except Exception as e:
@@ -144,16 +148,39 @@ def buy():
                 new_transaction = \
                     Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id)
                 db.session.add(new_transaction)
-                db.session.commit()
 
                 # update users balance
                 updated_amount = check_remaining_cash(session["user_id"]) - amount
                 user = db.session.query(Account).filter(Account.username == session["user_id"]).one()
                 user.balance = updated_amount
-                db.session.commit()
+
+                # update the table ownership
+                user_owner = \
+                    db.session.query(Account.username).filter(Account.username == session["user_id"]).limit(1).all()[0][
+                        0]
+
+                # in case user already owns the stock
+                if check_user_owns_stock(user_owner, stock_symbol):
+                    amount_owned_stocks = check_stock_amount_owned(user_owner, stock_symbol)
+                    updated_amount = int(amount_owned_stocks) + int(shares)
+                    db.session.query(Ownership) \
+                        .filter(Ownership.account_id == Account.id) \
+                        .filter(Ownership.stock_id == Stock.id) \
+                        .filter(Stock.name == stock_symbol) \
+                        .filter(Account.username == session["user_id"]) \
+                        .update({'amount': updated_amount}, synchronize_session='fetch')
+                    db.session.commit()
+                    return redirect("/buy")
+
+                else:
+                    add_ownership = Ownership(account_id=account_id, stock_id=stock_id, amount=shares)
+                    db.session.add(add_ownership)
+                    db.session.commit()
+                    return redirect("/buy")
+
             except Exception as e:
                 db.session.rollback()
-        return redirect("/")
+                return redirect("/")
     else:
         # GET request
         return render_template("buy.html")

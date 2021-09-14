@@ -1,7 +1,9 @@
 from functools import wraps
 from flask import g, request, redirect, url_for, session
 import re
-from .models import Account, Stock, db
+from .models import Account, Stock, db, Ownership
+from decimal import *
+from numbers import Number
 
 
 def login_required(f):
@@ -19,7 +21,7 @@ def login_required(f):
     return decorated_function
 
 
-def check_password_requirements(password, confirmation):
+def check_password_requirements(password: int, confirmation: int) -> bool:
     """Checks if password satisfies requirements."""
     if password == confirmation \
             and re.search("[A-Z]", password) \
@@ -30,7 +32,7 @@ def check_password_requirements(password, confirmation):
         return False
 
 
-def user_exists(username):
+def user_exists(username: str) -> bool:
     """Checks if user already exists."""
     user = Account.query.filter(Account.username == username).all()
     if len(user) == 1:
@@ -39,7 +41,7 @@ def user_exists(username):
         return False
 
 
-def stock_exists(stock_symbol):
+def stock_exists(stock_symbol: str) -> bool:
     """Checks if stock exists."""
     existing_stock = Stock.query.filter(stock_symbol == Stock.name).all()
     if len(existing_stock) >= 1:
@@ -48,15 +50,38 @@ def stock_exists(stock_symbol):
         return False
 
 
-def check_remaining_cash(username):
+def check_remaining_cash(username: str) -> Number:
     """Checks how much of cash user has."""
     remaining_cash = db.session.query(Account.balance).filter(Account.username == username).limit(1).all()
-    remaining_cash_int = int(remaining_cash[0][0])
-    return remaining_cash_int
+    return remaining_cash[0][0]
 
 
-def check_stock_price(stock):
+def check_stock_price(stock: str) -> Number:
     """Checks stock price."""
     stock_price = db.session.query(Stock.price).filter(Stock.name == stock).limit(1).all()
-    stock_price_int = int(stock_price[0][0])
-    return stock_price_int
+    return stock_price[0][0]
+
+
+def check_user_owns_stock(user: str, stock: str) -> bool:
+    """Checks if user already owns stock."""
+    user_owns_stock = db.session.query(Ownership.amount) \
+        .filter(Ownership.account_id == Account.id) \
+        .filter(Ownership.stock_id == Stock.id) \
+        .filter(Stock.name == stock) \
+        .filter(Account.username == user) \
+        .all()
+    if len(user_owns_stock) == 1:
+        return True
+    else:
+        return False
+
+
+def check_stock_amount_owned(user: str, stock: str) -> int:
+    """Check amount of given stock that user owns."""
+    amount = db.session.query(Ownership.amount) \
+        .filter(Ownership.account_id == Account.id) \
+        .filter(Ownership.stock_id == Stock.id) \
+        .filter(Stock.name == stock) \
+        .filter(Account.username == user) \
+        .all()[0][0]
+    return amount
