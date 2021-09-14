@@ -23,13 +23,9 @@ def page_not_found(e):
 def index():
     """Show homepage."""
     logged_user = session["user_id"]
-    # owned_stocks = db.session.query(Stock.name, Stock.price, Ownership.amount) \
-    #     .join(Ownership.stock_id == Stock.id) \
-    #     .join(Ownership.account_id == Account.id) \
-    #     .filter(Account.username == logged_user) \
-    #     .all()
-    # owned_stocks = Transaction.query.outerjoin(Ownership, and_())
-    return render_template("index.html")  # , owned_stocks=owned_stocks)
+    owned_stocks = check_owned_stocks(logged_user)
+    print(type(owned_stocks))
+    return render_template("index.html", owned_stocks=owned_stocks)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -184,3 +180,10 @@ def buy():
     else:
         # GET request
         return render_template("buy.html")
+
+#
+# @app.route("/sell", methods == ["GET", "POST"])
+# @login_required
+# def sell():
+#     if request.method == "GET":
+#         stocks =

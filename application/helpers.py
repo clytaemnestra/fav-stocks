@@ -85,3 +85,12 @@ def check_stock_amount_owned(user: str, stock: str) -> int:
         .filter(Account.username == user) \
         .all()[0][0]
     return amount
+
+
+def check_owned_stocks(user: str) -> list:
+    owned_stocks = db.session.query(Stock.name, Stock.price, Ownership.amount) \
+        .filter(Ownership.account_id == Account.id) \
+        .filter(Ownership.stock_id == Stock.id) \
+        .filter(Account.username == user) \
+        .all()
+    return owned_stocks
