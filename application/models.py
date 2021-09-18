@@ -23,7 +23,9 @@ class TransactionType(db.Model):
 
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    symbol = db.Column(db.String(20), nullable=False)
     name = db.Column(db.String(50), nullable=False)
+    volatility = db.Column(db.Numeric(), nullable=False)
     price = db.Column(db.Numeric(), nullable=False)
 
 

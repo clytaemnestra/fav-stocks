@@ -43,7 +43,7 @@ def user_exists(username: str) -> bool:
 
 def stock_exists(stock_symbol: str) -> bool:
     """Checks if stock exists."""
-    existing_stock = Stock.query.filter(stock_symbol == Stock.name).all()
+    existing_stock = Stock.query.filter(stock_symbol == Stock.symbol).all()
     if len(existing_stock) >= 1:
         return True
     else:
@@ -58,7 +58,7 @@ def check_remaining_cash(username: str) -> Number:
 
 def check_stock_price(stock: str) -> Number:
     """Checks stock price."""
-    stock_price = db.session.query(Stock.price).filter(Stock.name == stock).limit(1).all()
+    stock_price = db.session.query(Stock.price).filter(Stock.symbol == stock).limit(1).all()
     return stock_price[0][0]
 
 
@@ -67,7 +67,7 @@ def check_user_owns_stock(user: str, stock: str) -> bool:
     user_owns_stock = db.session.query(Ownership.amount) \
         .filter(Ownership.account_id == Account.id) \
         .filter(Ownership.stock_id == Stock.id) \
-        .filter(Stock.name == stock) \
+        .filter(Stock.symbol == stock) \
         .filter(Account.username == user) \
         .all()
     if len(user_owns_stock) == 1:
@@ -81,14 +81,14 @@ def check_stock_amount_owned(user: str, stock: str) -> int:
     amount = db.session.query(Ownership.amount) \
         .filter(Ownership.account_id == Account.id) \
         .filter(Ownership.stock_id == Stock.id) \
-        .filter(Stock.name == stock) \
+        .filter(Stock.symbol == stock) \
         .filter(Account.username == user) \
         .all()[0][0]
     return amount
 
 
 def check_owned_stocks(user: str) -> list:
-    owned_stocks = db.session.query(Stock.name, Stock.price, Ownership.amount) \
+    owned_stocks = db.session.query(Stock.symbol, Stock.name, Stock.price, Ownership.amount) \
         .filter(Ownership.account_id == Account.id) \
         .filter(Ownership.stock_id == Stock.id) \
         .filter(Account.username == user) \

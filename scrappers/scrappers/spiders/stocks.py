@@ -11,9 +11,10 @@ class Stocks(scrapy.Spider):
             rows = table.xpath('//tr')
 
             yield {
-                'id': i,
                 'symbol': rows.xpath('td/a/text()')[0].extract(),
-                'price': rows.xpath('td[7]/text()')[0].extract()
+                'name': rows.xpath('td[4]/a/text()')[0].extract(),
+                'volatility': rows.xpath('td[6]/text()')[0].extract(),
+                'price': rows.xpath('td[7]/text()')[0].extract(),
             }
 
         next_page = response.css('a.next.btn.btn-primary').attrib['href']

@@ -1,0 +1,110 @@
+id,symbol,name,volatility,price
+1,A,"Agilent Technologies,Inc.",11.492,1594.51
+2,ACC,American Campus Communities Inc,904,661
+3,ADNT,Adient plc,17797,845
+4,AGC,Altimeter Growth Corp.,6.798,466
+5,ALC,Alcon Inc.,14.632,842
+6,AMBA,"Ambarella, Inc.",74.677,480
+7,AMX,"America Movil, S.A.B. de C.V.",9.78,2231.932
+8,APP,AppLovin Corporation,23.874,1054.660
+9,ARQQ,Arqit Quantum Inc.,77.236,784.391
+10,ATER,"Aterian, Inc.",216.669,16945.391
+11,AVLR,"Avalara, Inc.",17.956,563.699
+12,AZPN,"Aspen Technology, Inc.",5.667,337.450
+13,BCE,"BCE, Inc.",5.393,1055.893
+14,BGS,"B&G Foods, Inc.",7.207,757.196
+15,BKR,Baker Hughes Company,20.001,6942.843
+16,BMY,Bristol-Myers Squibb Company,12.752,7638.023
+17,BRKR,Bruker Corporation,12.57,570.761
+18,BWXT,"BWX Technologies, Inc.",7.563,394.788
+19,CALM,"Cal-Maine Foods, Inc.",6.615,290.301
+20,CCEP,Coca-Cola European Partners plc,7.121,869.704
+21,CELH,"Celsius Holdings, Inc.",44.11,874.099
+22,CHKP,Check Point Software Technologies Ltd.,8.83,932.050
+23,CLDX,"Celldex Therapeutics, Inc.",26.05,885.998
+24,CNC,Centene Corporation,8.297,2962.012
+25,COLM,Columbia Sportswear Company,5.358,302.789
+26,CPT,Camden Property Trust,8.495,584.336
+27,CSCO,"Cisco Systems, Inc.",7.649,14075.457
+28,CVET,"Covetrus, Inc.",12.422,575.001
+29,DAN,Dana Holding Corporation,12.726,814.775
+30,DEI,"Douglas Emmett, Inc.",7.776,693.706
+31,DLO,DLocal Limited ,33.851,1206.814
+32,DOX,Amdocs Limited,2.889,454.565
+33,DX,"Dynex Capital, Inc.",2.363,530.149
+34,EFX,"Equifax, Inc.",11.095,532.798
+35,ENVX,Enovix Corporation,28.613,832.886
+36,ESI,Element Solutions Inc.,11.632,1218.492
+37,EXAS,Exact Sciences Corporation,20.705,1274.310
+38,FCF,First Commonwealth Financial Corporation,8.864,379.044
+39,FL,"Foot Locker, Inc.",19.831,1843.279
+40,FORM,"FormFactor, Inc.",20.47,346.814
+41,FTV,Fortive Corporation,3.924,2370.494
+42,GCMG,GCM Grosvenor Inc.,8.173,385.561
+43,GLBE,Global-E Online Ltd.,26.3,1075.006
+44,GOOGL,Alphabet Inc. - Class A,8.443,1190.312
+45,GSBD,"Goldman Sachs BDC, Inc.",3.001,459.937
+46,HASI,Hannon Armstrong Sustainable Infrastructure,12.109,352.717
+47,HIMX,"Himax Technologies, Inc.",15.227,3705.143
+48,HPQ,Hewlett-Packard Company,9.325,8526.705
+49,HUT,Hut 8 Mining Corp.,79.004,6140.690
+50,IDYA,"IDEAYA Biosciences, Inc.",24.477,315.988
+51,INMB,INmune Bio Inc.,66.091,643.667
+52,IPOF.U,"Social Capital Hedosophia Holdings Corp.",53.935,1128.786
+53,J,Jacobs Engineering Group Inc.,3.935,476.935
+54,JMIA,Jumia Technologies AG,23.846,4011.740
+55,KL,Kirkland Lake Gold Ltd.,15.28,1479.694
+56,KRG,Kite Realty Group Trust,14.228,806.939
+57,LBRDK,Liberty Broadband Corporation - Class C,7.422,679.975
+58,LHX,"L3Harris Technologies, Inc.",3.08,907.833
+59,LPG,Dorian LPG Ltd.,19.671,326.184
+60,LUV,Southwest Airlines Company,8.851,7154.931
+61,MARA,"Marathon Patent Group, Inc.",37.91,8753.795
+62,MDLZ,"Mondelez International, Inc.",7.311,5579.224
+63,MKSI,"MKS Instruments, Inc.",9.012,432.333
+64,MPC,Marathon Petroleum Corporation,9.508,5429.948
+65,MSTR,MicroStrategy Incorporated,20.32,793.388
+66,MYOV,Myovant Sciences Ltd.,32.621,658.486
+67,NEWR,"New Relic, Inc.",10.458,403.096
+68,NMM,Navios Maritime Partners LP,37.72,448.017
+69,NTCT,"NetScout Systems, Inc.",6.723,323.799
+70,NVT,nVent Electric plc,7.539,766.275
+71,OI,"Owens-Illinois, Inc.",10.835,702.943
+72,OPCH,"Option Care Health, Inc.",30.205,2183.264
+73,OUT,OUTFRONT Media Inc.,11.624,1182.821
+74,PAYX,"Paychex, Inc.",7.107,1278.268
+75,PECO,"Phillips Edison & Company, Inc",5.233,310.339
+76,PINC,"Premier, Inc.",9.241,537.246
+77,PMVP,"PMV Pharmaceuticals, Inc.",20.156,342.351
+78,PRIM,Primoris Services Corporation,11.83,362.992
+79,PVAC,Penn Virginia Corporation,37.983,326.925
+80,QURE,uniQure N.V.,41.946,435.475
+81,RDS.A,Royal Dutch Shell PLC Class A,5.685,4480.550
+82,RGC,Regencell Bioscience Holdings Limited,157.869,1113.111
+83,RNG,"Ringcentral, Inc.",21.68,1041.233
+84,RSG,"Republic Services, Inc.",5.328,963.637
+85,S,"SentinelOne, Inc",46.31,1884.004
+86,SBUX,Starbucks Corporation,5.591,5082.769
+87,SFM,"Sprouts Farmers Market, Inc.",11.976,1878.022
+88,SILK,"Silk Road Medical, Inc.",38.513,317.225
+89,SLM,SLM Corporation,8.099,2408.311
+90,SOFI,"SoFi (Social Finance, Inc.)",16.907,17825.168
+91,SR,Spire Inc.,13.92,265.705
+92,STEP,StepStone Group Inc.,9.664,256.511
+93,SUPN,"Supernus Pharmaceuticals, Inc.",20.523,407.288
+94,TASK,"TaskUs, Inc.",64.789,542.220
+95,TEX,Terex Corporation,18.564,584.881
+96,TLYS,"Tilly's, Inc.",18.001,289.609
+97,TRGP,"Targa Resources, Inc.",9.359,1288.435
+98,TSM,Taiwan Semiconductor Manufacturing Company Ltd.,17.991,7960.125
+99,TWOU,"2U, Inc.",11.126,872.710
+100,UGI,UGI Corporation,7.199,759.448
+101,USFD,US Foods Holding Corp.,8.354,2309.660
+102,VICI,VICI Properties Inc.,11.656,5708.006
+103,VOYA,ING U.S. Inc.,5.37,1196.479
+104,VWE,"Vintage Wine Estates, Inc.",25.603,275.288
+105,WES,"Western Gas Partners, LP Limited Partner Interests",12.112,836.261
+106,WOOF,"Petco Health and Wellness Company, Inc.",16.029,1896.455
+107,XEC,Cimarex Energy Co,37.281,797.583
+108,YOU,"Clear Secure, Inc.",18.435,605.203
+109,ZVIA,Zevia PBC,36.453,349.290

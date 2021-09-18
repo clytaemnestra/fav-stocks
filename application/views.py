@@ -23,9 +23,17 @@ def page_not_found(e):
 def index():
     """Show homepage."""
     logged_user = session["user_id"]
+    all_stocks = db.session.query(Stock.name, Stock.symbol, Stock.volatility, Stock.price).all()
+    return render_template("index.html", all_stocks=all_stocks)
+
+
+@app.route("/owned")
+@login_required
+def owned_stocks():
+    """Shows tables of owned stocks."""
+    logged_user = session["user_id"]
     owned_stocks = check_owned_stocks(logged_user)
-    print(type(owned_stocks))
-    return render_template("index.html", owned_stocks=owned_stocks)
+    return render_template("owned.html", owned_stocks=owned_stocks)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -140,7 +148,7 @@ def buy():
                 amount = check_stock_price(stock_symbol) * int(shares)
                 account_id = \
                     db.session.query(Account.id).filter(Account.username == session["user_id"]).limit(1).all()[0][0]
-                stock_id = db.session.query(Stock.id).filter(Stock.name == stock_symbol).limit(1).all()[0][0]
+                stock_id = db.session.query(Stock.id).filter(Stock.symbol == stock_symbol).limit(1).all()[0][0]
                 new_transaction = \
                     Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id)
                 db.session.add(new_transaction)
@@ -162,7 +170,7 @@ def buy():
                     db.session.query(Ownership) \
                         .filter(Ownership.account_id == Account.id) \
                         .filter(Ownership.stock_id == Stock.id) \
-                        .filter(Stock.name == stock_symbol) \
+                        .filter(Stock.symbol == stock_symbol) \
                         .filter(Account.username == session["user_id"]) \
                         .update({'amount': updated_amount}, synchronize_session='fetch')
                     db.session.commit()
