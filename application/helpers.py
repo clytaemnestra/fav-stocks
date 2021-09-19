@@ -26,7 +26,7 @@ def check_password_requirements(password: int, confirmation: int) -> bool:
     if password == confirmation \
             and re.search("[A-Z]", password) \
             and re.search("[0-9]", password) \
-            and len(password) > 8:
+            and len(password) > 7:
         return True
     else:
         return False
@@ -88,6 +88,7 @@ def check_stock_amount_owned(user: str, stock: str) -> int:
 
 
 def check_owned_stocks(user: str) -> list:
+    """Find all stocks that user owns."""
     owned_stocks = db.session.query(Stock.symbol, Stock.name, Stock.price, Ownership.amount) \
         .filter(Ownership.account_id == Account.id) \
         .filter(Ownership.stock_id == Stock.id) \

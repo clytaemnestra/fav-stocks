@@ -123,7 +123,7 @@ def buy():
 
         # check if input is empty
         if not stock_symbol or not shares:
-            flash("Input cannot be empty.", 400)
+            flash("Please fill in all required fields.", 400)
             return redirect("/buy")
 
         # check if user entered a valid number
@@ -189,11 +189,74 @@ def buy():
         return render_template("buy.html")
 
 
-# @app.route("/sell", methods == ["GET", "POST"])
-# @login_required
-# def sell():
-#     if request.method == "GET":
-#         stocks =
+@app.route("/sell", methods=["GET", "POST"])
+@login_required
+def sell():
+    if request.method == "GET":
+        stocks = check_owned_stocks(session["user_id"])
+        return render_template("sell.html", stocks=stocks)
+    else:
+        stock = request.form.get("stocks")
+        shares = request.form.get("shares")
+
+        # check if input is empty
+        if not stock or not shares:
+            flash("Please fill in all required fields.", 400)
+            return redirect("/sell")
+
+        # check if user entered a valid number
+        elif int(shares) <= 0:
+            flash("Please enter valid whole number.", 400)
+            return redirect("/sell")
+
+        elif int(shares) > check_stock_amount_owned(session["user_id"], stock):
+            flash("You cannot sell, what you don't own - you're not government. Please enter valid shares.")
+            return redirect("/sell")
+
+        else:
+            try:
+                # sell stock
+                amount = check_stock_price(stock) * int(shares)
+                account_id = \
+                    db.session.query(Account.id).filter(Account.username == session["user_id"]).limit(1).all()[0][0]
+                stock_id = db.session.query(Stock.id).filter(Stock.symbol == stock).limit(1).all()[0][0]
+                new_transaction = \
+                    Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id, transaction_type_id='2', shares=shares)
+                db.session.add(new_transaction)
+
+                # update users balance
+                updated_amount = check_remaining_cash(session["user_id"]) + amount
+                user = db.session.query(Account).filter(Account.username == session["user_id"]).one()
+                user.balance = updated_amount
+
+                # update the table ownership
+                user_owner = \
+                    db.session.query(Account.username).filter(Account.username == session["user_id"]).limit(1).all()[0][
+                        0]
+
+                amount_owned_stocks = check_stock_amount_owned(user_owner, stock)
+                if int(amount_owned_stocks) - int(shares) >= 1:
+                    updated_amount = int(amount_owned_stocks) - int(shares)
+                    db.session.query(Ownership) \
+                        .filter(Ownership.account_id == Account.id) \
+                        .filter(Ownership.stock_id == Stock.id) \
+                        .filter(Stock.symbol == stock) \
+                        .filter(Account.username == session["user_id"]) \
+                        .update({'amount': updated_amount}, synchronize_session='fetch')
+                else:
+                    db.session.query(Ownership) \
+                        .filter(Ownership.account_id == Account.id) \
+                        .filter(Ownership.stock_id == Stock.id) \
+                        .filter(Stock.symbol == stock) \
+                        .filter(Account.username == session["user_id"]) \
+                        .delete(synchronize_session='fetch')
+                db.session.commit()
+                return redirect("/sell")
+
+            except Exception as e:
+                db.session.rollback()
+                return redirect("/")
+
 
 @app.route("/history", methods=["GET"])
 @login_required
