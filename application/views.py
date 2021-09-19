@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, session, flash
 from .helpers import *
 from sqlalchemy.sql import select
-from .models import Account, db, Stock, Ownership, Transaction
+from .models import Account, db, Stock, Ownership, Transaction, TransactionType
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import logging
@@ -22,7 +22,6 @@ def page_not_found(e):
 @login_required
 def index():
     """Show homepage."""
-    logged_user = session["user_id"]
     all_stocks = db.session.query(Stock.name, Stock.symbol, Stock.volatility, Stock.price).all()
     return render_template("index.html", all_stocks=all_stocks)
 
@@ -150,7 +149,7 @@ def buy():
                     db.session.query(Account.id).filter(Account.username == session["user_id"]).limit(1).all()[0][0]
                 stock_id = db.session.query(Stock.id).filter(Stock.symbol == stock_symbol).limit(1).all()[0][0]
                 new_transaction = \
-                    Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id)
+                    Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id, transaction_type_id='1', shares=shares)
                 db.session.add(new_transaction)
 
                 # update users balance
@@ -189,9 +188,19 @@ def buy():
         # GET request
         return render_template("buy.html")
 
-#
+
 # @app.route("/sell", methods == ["GET", "POST"])
 # @login_required
 # def sell():
 #     if request.method == "GET":
 #         stocks =
+
+@app.route("/history", methods=["GET"])
+@login_required
+def history():
+    all_transactions = db.session.query(Stock.symbol, Stock.name, Stock.price, Transaction.time, TransactionType.type, Transaction.shares) \
+        .filter(Stock.id == Transaction.stock_id, Transaction.transaction_type_id == TransactionType.id,
+                Transaction.account_id == Account.id) \
+        .filter(Account.username == session["user_id"]) \
+        .all()
+    return render_template("history.html", all_transactions=all_transactions)

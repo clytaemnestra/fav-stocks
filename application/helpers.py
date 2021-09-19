@@ -94,3 +94,4 @@ def check_owned_stocks(user: str) -> list:
         .filter(Account.username == user) \
         .all()
     return owned_stocks
+

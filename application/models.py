@@ -35,7 +35,8 @@ class Transaction(db.Model):
     amount = db.Column(db.Integer, nullable=False)
     account_id = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey(Stock.id), nullable=False)
-    transaction_type_id = (db.Integer, db.ForeignKey(TransactionType.id))
+    transaction_type_id = db.Column(db.Integer, db.ForeignKey(TransactionType.id), nullable=False)
+    shares = db.Column(db.Integer, nullable=False)
 
 
 class Ownership(db.Model):

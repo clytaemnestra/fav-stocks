@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+
+<h1>History of Transactions</h1>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Symbol</th>
+            <th>Stock</th>
+            <th>Price Per Stock</th>
+            <th>Time</th>
+            <th>Shares</th>
+            <th>Transaction Type</th>
+        </tr>
+        {% for transaction in all_transactions %}
+        <tr>
+            <td>{{ transaction['symbol'] }}</td>
+            <td>{{ transaction['name'] }}</td>
+            <td>{{ transaction['price'] }}</td>
+            <td>{{ transaction['time'].strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ transaction['shares'] }}</td>
+            <td>{{ transaction['type']|replace("TransactionTypesPostgresEnum.", "") }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
