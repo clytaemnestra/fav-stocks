@@ -22,17 +22,18 @@ def page_not_found(e):
 @login_required
 def index():
     """Show homepage."""
-    all_stocks = db.session.query(Stock.name, Stock.symbol, Stock.volatility, Stock.price).all()
-    return render_template("index.html", all_stocks=all_stocks)
-
-
-@app.route("/owned")
-@login_required
-def owned_stocks():
-    """Shows tables of owned stocks."""
     logged_user = session["user_id"]
     owned_stocks = check_owned_stocks(logged_user)
-    return render_template("owned.html", owned_stocks=owned_stocks)
+    balance = db.session.query(Account.balance).filter(Account.username == logged_user).limit(1).all()[0][0]
+    return render_template("index.html", owned_stocks=owned_stocks, user=logged_user, balance=balance)
+
+
+@app.route("/all")
+@login_required
+def all_stocks():
+    """Show all stocks."""
+    stocks = db.session.query(Stock.name, Stock.symbol, Stock.volatility, Stock.price).all()
+    return render_template("all-stocks.html", stocks=stocks)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -67,7 +68,6 @@ def register_user():
                 db.session.commit()
             except Exception as e:
                 db.session.rollback()
-                print(str(e))
         flash("Registered!")
         return redirect("/login")
     else:
@@ -177,14 +177,14 @@ def buy():
                         .update({'amount': updated_amount}, synchronize_session='fetch')
                     db.session.commit()
                     flash("Bought!")
-                    return redirect("/buy")
+                    return redirect("/")
 
                 else:
                     add_ownership = Ownership(account_id=account_id, stock_id=stock_id, amount=shares)
                     db.session.add(add_ownership)
                     db.session.commit()
                     flash("Bought!")
-                    return redirect("/buy")
+                    return redirect("/")
 
             except Exception as e:
                 db.session.rollback()
@@ -257,7 +257,7 @@ def sell():
                         .delete(synchronize_session='fetch')
                 flash("Sold!")
                 db.session.commit()
-                return redirect("/sell")
+                return redirect("/")
 
             except Exception as e:
                 db.session.rollback()

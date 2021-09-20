@@ -80,6 +80,12 @@ h1 {
     color: #6B8EB7;
 }
 
+h2 {
+    margin-top: auto;
+    margin-bottom: 50px;
+    color: #6B8EB7;
+}
+
 img {
     width: 100%;
     height: auto;
