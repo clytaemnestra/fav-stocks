@@ -68,6 +68,7 @@ def register_user():
             except Exception as e:
                 db.session.rollback()
                 print(str(e))
+        flash("Registered!")
         return redirect("/login")
     else:
         # GET request
@@ -101,6 +102,7 @@ def login():
         else:
             session["user_id"] = username
             # logs user in and displays homepage
+            flash("You're logged in!")
             return redirect("/")
     else:
         # GET request
@@ -111,6 +113,7 @@ def login():
 def logout():
     """Logs user out."""
     session.clear()
+    flash("You're logged out!")
     return redirect("/login")
 
 
@@ -173,12 +176,14 @@ def buy():
                         .filter(Account.username == session["user_id"]) \
                         .update({'amount': updated_amount}, synchronize_session='fetch')
                     db.session.commit()
+                    flash("Bought!")
                     return redirect("/buy")
 
                 else:
                     add_ownership = Ownership(account_id=account_id, stock_id=stock_id, amount=shares)
                     db.session.add(add_ownership)
                     db.session.commit()
+                    flash("Bought!")
                     return redirect("/buy")
 
             except Exception as e:
@@ -250,6 +255,7 @@ def sell():
                         .filter(Stock.symbol == stock) \
                         .filter(Account.username == session["user_id"]) \
                         .delete(synchronize_session='fetch')
+                flash("Sold!")
                 db.session.commit()
                 return redirect("/sell")
 

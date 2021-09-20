@@ -30,7 +30,7 @@ footer {
     width: 100%;
 }
 
-.btn-primary {
+.btn-primary, .btn-primary:hover, .btn-primary:focus .btn-primary:visited, .btn-primary:active {
     background-color: #6B8EB7;
 }
 
@@ -77,6 +77,7 @@ tr    {
 h1 {
     margin-top: auto;
     margin-bottom: 50px;
+    color: #6B8EB7;
 }
 
 img {
@@ -88,3 +89,10 @@ img {
     color: white; !important;
     background-color: #6B8EB7; !important;
     }
+
+.flashes {
+    text-align: center;
+    font-size: large;
+    color: #6B8EB7;
+    background-color:white;
+}
