@@ -27,7 +27,7 @@ footer {
     background-color: #6B8EB7;
     position: absolute;
     bottom: 0;
-    width: 100%;
+    width: 100%;s
 }
 
 .btn-primary, .btn-primary:hover, .btn-primary:focus .btn-primary:visited, .btn-primary:active {
@@ -101,4 +101,8 @@ img {
     font-size: large;
     color: #6B8EB7;
     background-color:white;
+}
+
+a {
+    color: white;
 }
