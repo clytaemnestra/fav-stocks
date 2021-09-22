@@ -1,1 +1,1 @@
-web: gunicorn fav-stocks.wsgi
+web: gunicorn wsgi
