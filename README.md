@@ -48,11 +48,9 @@ Favourite stocks is an application which I've made for learning purposes. It's a
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
+### Installation
 To get a local copy up and running follow the following steps.
 
-
-### Installation
 <details>
   
 1. Clone the repo
