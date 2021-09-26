@@ -18,7 +18,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#roadmap">Roadmap & Versions</a></li>
   </ol>
 </details>
 
@@ -90,6 +90,6 @@ flask run
 </details>
 
 <!-- ROADMAP -->
-## Roadmap
+## Roadmap & Versions
 
 Please note that this is **not** the final version. I'm currently working on the deployment to Heroku, so you don't have to install it locally. I'm also working on the implementation of unit tests, so to be able to test out the endpoints on every pull request. Afterwards I plan to dockerize the application, so to make the installation proces smoother. I'd also like to automatically update database every minute, same as the stocks prices update on the market.  
