@@ -18,7 +18,7 @@ class TransactionTypesPostgresEnum(enum.Enum):
 
 class TransactionType(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    type = db.Column(db.Enum(TransactionTypesPostgresEnum, create_type=False), nullable=False)
+    type = db.Column(db.Enum(TransactionTypesPostgresEnum, create_type=False), name="TransactionTypesPostgresEnum", nullable=False)
 
 
 class Stock(db.Model):
