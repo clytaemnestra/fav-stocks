@@ -17,7 +17,7 @@ class Account(db.Model):
 
 class TransactionType(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    type = db.Column(db.Enum('BUY', 'SELL', name="TransactionTypesPostgresEnum", create_type=False), nullable=False)
+    type = db.Column(db.Enum('buy', 'sell', name="transactiontypespostgresenum", create_type=False), nullable=False)
 
 
 class Stock(db.Model):
