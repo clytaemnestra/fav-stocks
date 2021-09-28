@@ -10,15 +10,14 @@ class Account(db.Model):
     hash = db.Column(db.String(120), nullable=False)
     balance = db.Column(db.Numeric())
 
-
-class TransactionTypesPostgresEnum(enum.Enum):
-    BUY = 'buy'
-    SELL = 'sell'
+# class TransactionTypesPostgresEnum(enum.Enum):
+#     BUY = 'buy'
+#     SELL = 'sell'
 
 
 class TransactionType(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    type = db.Column(db.Enum(TransactionTypesPostgresEnum, name="TransactionTypesPostgresEnum", create_type=False), nullable=False)
+    type = db.Column(db.Enum('BUY', 'SELL', name="transaction_types_postgres_enum", create_type=False), nullable=False)
 
 
 class Stock(db.Model):
