@@ -9,6 +9,7 @@ class Account(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     hash = db.Column(db.String(120), nullable=False)
     balance = db.Column(db.Numeric())
+    test_field = db.Column(db.Integer())
 
 
 class TransactionTypesPostgresEnum(enum.Enum):
