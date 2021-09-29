@@ -48,8 +48,11 @@ Favourite stocks is an application which I've made for learning purposes. It's a
 
 <!-- GETTING STARTED -->
 ## Getting Started
-### Installation
-To get a local copy up and running follow the following steps.
+### Heroku
+Coming soon! 
+
+### Local Installation
+To get a local copy up and running follow the steps below.
 
 <details>
   
@@ -92,4 +95,4 @@ flask run
 <!-- ROADMAP -->
 ## Roadmap & Versions
 
-Please note that this is **not** the final version. I'm currently working on the deployment to Heroku, so you don't have to install it locally. I'm also working on the implementation of unit tests, so to be able to test out the endpoints on every pull request. Afterwards I plan to dockerize the application, so to make the installation proces smoother. I'd also like to automatically update database every minute, same as the stocks prices update on the market.  
+Please note that this is **not** the final version. I'm currently working on the implementation of unit tests, so to be able to test out the endpoints on every pull request. Afterwards I plan to dockerize the application, so to make the installation proces smoother. I'd also like to automatically update database every minute, same as the stocks prices update on the market.  
