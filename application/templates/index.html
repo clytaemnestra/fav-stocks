@@ -7,7 +7,7 @@
 {% block main %}
 
 <h1>Owned Stocks</h1>
-<h2>The available balance for the user {{ user }} is $ {{ balance }}.</h2>
+<h2>Your available balance is ${{ balance }}.</h2>
 <div class="table-responsive">
     <table class="table">
         <tr>
@@ -22,7 +22,6 @@
             <td>{{ owned_stock['name'] }}</td>
             <td>{{ owned_stock['price'] }}</td>
             <td>{{ owned_stock['amount'] }}</td>
-
         </tr>
     {% endfor %}
     </table>
