@@ -49,7 +49,7 @@ Favourite stocks is an application which I've made for learning purposes. It's a
 <!-- GETTING STARTED -->
 ## Getting Started
 ### Heroku
-The app is available on [this](https://fav-stocks.herokuapp.com/) URI address. Please not that I am using free tier, meaning it takes around 30 seconds for the app to start, if it's not active. 
+The app is available on [this](https://fav-stocks.herokuapp.com/) URI address. Please note that I am using free tier, meaning it takes around 30 seconds for the app to start, if it's not active. 
 
 In case you don't want to register, you can use the following credentials:
 * username: example-user
