@@ -1,7 +1,6 @@
 # Favourite Stocks App
 <!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+ <h2 style="display: inline-block">Table of Contents</h2>
   <ol>
     <li>
       <a href="#about-the-application">About The Application</a>
@@ -15,12 +14,12 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#heroku">Heroku</a></li>        
+        <li><a href="#local-installation">Local installation</a></li>
       </ul>
     </li>
     <li><a href="#roadmap--versions">Roadmap & Versions</a></li>
   </ol>
-</details>
 
 
 ## About The Application
@@ -49,7 +48,7 @@ Favourite stocks is an application which I've made for learning purposes. It's a
 <!-- GETTING STARTED -->
 ## Getting Started
 ### Heroku
-The app is available on [this](https://fav-stocks.herokuapp.com/) URI address. Please not that I am using free tier, meaning it takes around 30 seconds for the app to start, if it's not active. 
+The app is available on [this](https://fav-stocks.herokuapp.com/) URI address. Please note that I am using free tier, meaning it takes around 30 seconds for the app to start, if it's not active. 
 
 In case you don't want to register, you can use the following credentials:
 * username: example-user
