@@ -23,10 +23,12 @@ def login_required(f):
 
 def check_password_requirements(password: int, confirmation: int) -> bool:
     """Checks if password satisfies requirements."""
-    if password == confirmation \
-            and re.search("[A-Z]", password) \
-            and re.search("[0-9]", password) \
-            and len(password) > 7:
+    if (
+        password == confirmation
+        and re.search("[A-Z]", password)
+        and re.search("[0-9]", password)
+        and len(password) > 7
+    ):
         return True
     else:
         return False
@@ -52,24 +54,33 @@ def stock_exists(stock_symbol: str) -> bool:
 
 def check_remaining_cash(username: str) -> Number:
     """Checks how much of cash user has."""
-    remaining_cash = db.session.query(Account.balance).filter(Account.username == username).limit(1).all()
+    remaining_cash = (
+        db.session.query(Account.balance)
+        .filter(Account.username == username)
+        .limit(1)
+        .all()
+    )
     return remaining_cash[0][0]
 
 
 def check_stock_price(stock: str) -> Number:
     """Checks stock price."""
-    stock_price = db.session.query(Stock.price).filter(Stock.symbol == stock).limit(1).all()
+    stock_price = (
+        db.session.query(Stock.price).filter(Stock.symbol == stock).limit(1).all()
+    )
     return stock_price[0][0]
 
 
 def check_user_owns_stock(user: str, stock: str) -> bool:
     """Checks if user already owns stock."""
-    user_owns_stock = db.session.query(Ownership.amount) \
-        .filter(Ownership.account_id == Account.id) \
-        .filter(Ownership.stock_id == Stock.id) \
-        .filter(Stock.symbol == stock) \
-        .filter(Account.username == user) \
+    user_owns_stock = (
+        db.session.query(Ownership.amount)
+        .filter(Ownership.account_id == Account.id)
+        .filter(Ownership.stock_id == Stock.id)
+        .filter(Stock.symbol == stock)
+        .filter(Account.username == user)
         .all()
+    )
     if len(user_owns_stock) == 1:
         return True
     else:
@@ -78,21 +89,24 @@ def check_user_owns_stock(user: str, stock: str) -> bool:
 
 def check_stock_amount_owned(user: str, stock: str) -> int:
     """Check amount of given stock that user owns."""
-    amount = db.session.query(Ownership.amount) \
-        .filter(Ownership.account_id == Account.id) \
-        .filter(Ownership.stock_id == Stock.id) \
-        .filter(Stock.symbol == stock) \
-        .filter(Account.username == user) \
+    amount = (
+        db.session.query(Ownership.amount)
+        .filter(Ownership.account_id == Account.id)
+        .filter(Ownership.stock_id == Stock.id)
+        .filter(Stock.symbol == stock)
+        .filter(Account.username == user)
         .all()[0][0]
+    )
     return amount
 
 
 def check_owned_stocks(user: str) -> list:
     """Find all stocks that user owns."""
-    owned_stocks = db.session.query(Stock.symbol, Stock.name, Stock.price, Ownership.amount) \
-        .filter(Ownership.account_id == Account.id) \
-        .filter(Ownership.stock_id == Stock.id) \
-        .filter(Account.username == user) \
+    owned_stocks = (
+        db.session.query(Stock.symbol, Stock.name, Stock.price, Ownership.amount)
+        .filter(Ownership.account_id == Account.id)
+        .filter(Ownership.stock_id == Stock.id)
+        .filter(Account.username == user)
         .all()
+    )
     return owned_stocks
-

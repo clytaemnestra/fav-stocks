@@ -12,13 +12,15 @@ class Account(db.Model):
 
 
 class TransactionTypesPostgresEnum(enum.Enum):
-    buy = 'buy'
-    sell = 'sell'
+    buy = "buy"
+    sell = "sell"
 
 
 class TransactionType(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    type = db.Column(db.Enum(TransactionTypesPostgresEnum, create_type=False), nullable=False)
+    type = db.Column(
+        db.Enum(TransactionTypesPostgresEnum, create_type=False), nullable=False
+    )
 
 
 class Stock(db.Model):
@@ -35,7 +37,9 @@ class Transaction(db.Model):
     amount = db.Column(db.Integer, nullable=False)
     account_id = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey(Stock.id), nullable=False)
-    transaction_type_id = db.Column(db.Integer, db.ForeignKey(TransactionType.id), nullable=False)
+    transaction_type_id = db.Column(
+        db.Integer, db.ForeignKey(TransactionType.id), nullable=False
+    )
     shares = db.Column(db.Integer, nullable=False)
 
 
@@ -44,4 +48,3 @@ class Ownership(db.Model):
     account_id = db.Column(db.Integer, db.ForeignKey(Account.id))
     stock_id = db.Column(db.Integer, db.ForeignKey(Stock.id))
     amount = db.Column(db.Integer, nullable=False)
-

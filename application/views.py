@@ -7,42 +7,52 @@ from datetime import datetime
 import logging
 
 logging.basicConfig()
-logger = logging.getLogger('sqlalchemy.engine')
+logger = logging.getLogger("sqlalchemy.engine")
 logger.setLevel(logging.DEBUG)
 
-app = Blueprint('app', __name__)
+app = Blueprint("app", __name__)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """Returns error template, if user enters wrong URL."""
     return render_template("404.html"), 404
 
 
 @app.route("/")
 @login_required
 def index():
-    """Show homepage."""
+    """Shows homepage."""
     logged_user = session["user_id"]
     owned_stocks = check_owned_stocks(logged_user)
-    balance = db.session.query(Account.balance).filter(Account.username == logged_user).limit(1).all()[0][0]
-    return render_template("index.html", owned_stocks=owned_stocks, user=logged_user, balance=balance)
+    balance = (
+        db.session.query(Account.balance)
+        .filter(Account.username == logged_user)
+        .limit(1)
+        .all()[0][0]
+    )
+    return render_template(
+        "index.html", owned_stocks=owned_stocks, user=logged_user, balance=balance
+    )
 
 
 @app.route("/all")
 @login_required
 def all_stocks():
-    """Show all stocks."""
-    stocks = db.session.query(Stock.name, Stock.symbol, Stock.volatility, Stock.price).all()
+    """Shows all stocks."""
+    stocks = db.session.query(
+        Stock.name, Stock.symbol, Stock.volatility, Stock.price
+    ).all()
     return render_template("all-stocks.html", stocks=stocks)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register_user():
-    """Register user in the database."""
+    """Registers user in the database."""
     if request.method == "POST":
-        username = request.form.get('username')
-        confirmation = request.form.get('confirmation')
-        password = request.form.get('password')
+        username = request.form.get("username")
+        confirmation = request.form.get("confirmation")
+        password = request.form.get("password")
 
         # in case of empty input
         if not username or not password or not confirmation:
@@ -51,7 +61,9 @@ def register_user():
 
         # in case password doesn't meet complexity requirements
         if not check_password_requirements(password, confirmation):
-            flash("Password must match complexity requirements: minimum 8 characters, a capital letter and a number.")
+            flash(
+                "Password must match complexity requirements: minimum 8 characters, a capital letter and a number."
+            )
             return render_template("register.html"), 403
 
         # check if user already exists
@@ -63,7 +75,9 @@ def register_user():
             try:
                 # create new account and add it to the database
                 password_hash = generate_password_hash(password)
-                new_account = Account(username=username, hash=password_hash, balance=10000)
+                new_account = Account(
+                    username=username, hash=password_hash, balance=10000
+                )
                 db.session.add(new_account)
                 db.session.commit()
             except Exception as e:
@@ -79,9 +93,14 @@ def register_user():
 def login():
     """Logs user in, by remembering his username within the session"""
     if request.method == "POST":
-        username = request.form.get('username')
-        password = request.form.get('password')
-        hash = db.session.query(Account.hash).filter(Account.username == username).limit(1).all()
+        username = request.form.get("username")
+        password = request.form.get("password")
+        hash = (
+            db.session.query(Account.hash)
+            .filter(Account.username == username)
+            .limit(1)
+            .all()
+        )
 
         # in case of empty input
         if not username or not password:
@@ -120,6 +139,7 @@ def logout():
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
+    """Performs purchase of stock."""
     if request.method == "POST":
         stock_symbol = request.form.get("symbol")
         shares = request.form.get("shares")
@@ -140,7 +160,9 @@ def buy():
             return redirect("/buy")
 
         # check if user has enough of remaining balance
-        elif check_remaining_cash(session["user_id"]) < check_stock_price(stock_symbol) * int(shares):
+        elif check_remaining_cash(session["user_id"]) < check_stock_price(
+            stock_symbol
+        ) * int(shares):
             flash("You don't have enough of balance for the given purchase.", 400)
             return redirect("/buy")
 
@@ -148,39 +170,68 @@ def buy():
             try:
                 # perform purchase
                 amount = check_stock_price(stock_symbol) * int(shares)
-                account_id = \
-                    db.session.query(Account.id).filter(Account.username == session["user_id"]).limit(1).all()[0][0]
-                stock_id = db.session.query(Stock.id).filter(Stock.symbol == stock_symbol).limit(1).all()[0][0]
-                new_transaction = \
-                    Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id, transaction_type_id='1', shares=shares)
+                account_id = (
+                    db.session.query(Account.id)
+                    .filter(Account.username == session["user_id"])
+                    .limit(1)
+                    .all()[0][0]
+                )
+                stock_id = (
+                    db.session.query(Stock.id)
+                    .filter(Stock.symbol == stock_symbol)
+                    .limit(1)
+                    .all()[0][0]
+                )
+                new_transaction = Transaction(
+                    time=datetime.now(),
+                    amount=amount,
+                    account_id=account_id,
+                    stock_id=stock_id,
+                    transaction_type_id="1",
+                    shares=shares,
+                )
                 db.session.add(new_transaction)
 
                 # update users balance
                 updated_amount = check_remaining_cash(session["user_id"]) - amount
-                user = db.session.query(Account).filter(Account.username == session["user_id"]).one()
+                user = (
+                    db.session.query(Account)
+                    .filter(Account.username == session["user_id"])
+                    .one()
+                )
                 user.balance = updated_amount
 
                 # update the table ownership
-                user_owner = \
-                    db.session.query(Account.username).filter(Account.username == session["user_id"]).limit(1).all()[0][
-                        0]
+                user_owner = (
+                    db.session.query(Account.username)
+                    .filter(Account.username == session["user_id"])
+                    .limit(1)
+                    .all()[0][0]
+                )
 
                 # in case user already owns the stock
                 if check_user_owns_stock(user_owner, stock_symbol):
-                    amount_owned_stocks = check_stock_amount_owned(user_owner, stock_symbol)
+                    amount_owned_stocks = check_stock_amount_owned(
+                        user_owner, stock_symbol
+                    )
                     updated_amount = int(amount_owned_stocks) + int(shares)
-                    db.session.query(Ownership) \
-                        .filter(Ownership.account_id == Account.id) \
-                        .filter(Ownership.stock_id == Stock.id) \
-                        .filter(Stock.symbol == stock_symbol) \
-                        .filter(Account.username == session["user_id"]) \
-                        .update({'amount': updated_amount}, synchronize_session='fetch')
+                    db.session.query(Ownership).filter(
+                        Ownership.account_id == Account.id
+                    ).filter(Ownership.stock_id == Stock.id).filter(
+                        Stock.symbol == stock_symbol
+                    ).filter(
+                        Account.username == session["user_id"]
+                    ).update(
+                        {"amount": updated_amount}, synchronize_session="fetch"
+                    )
                     db.session.commit()
                     flash("Bought!")
                     return redirect("/")
 
                 else:
-                    add_ownership = Ownership(account_id=account_id, stock_id=stock_id, amount=shares)
+                    add_ownership = Ownership(
+                        account_id=account_id, stock_id=stock_id, amount=shares
+                    )
                     db.session.add(add_ownership)
                     db.session.commit()
                     flash("Bought!")
@@ -197,6 +248,7 @@ def buy():
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
+    """Sells shares of stock."""
     if request.method == "GET":
         stocks = check_owned_stocks(session["user_id"])
         return render_template("sell.html", stocks=stocks)
@@ -215,46 +267,78 @@ def sell():
             return redirect("/sell")
 
         elif int(shares) > check_stock_amount_owned(session["user_id"], stock):
-            flash("You cannot sell, what you don't own - you're not government. Please enter valid shares.")
+            flash(
+                "You cannot sell, what you do not own. Please enter valid amount of shares."
+            )
             return redirect("/sell")
 
         else:
             try:
                 # sell stock
                 amount = check_stock_price(stock) * int(shares)
-                account_id = \
-                    db.session.query(Account.id).filter(Account.username == session["user_id"]).limit(1).all()[0][0]
-                stock_id = db.session.query(Stock.id).filter(Stock.symbol == stock).limit(1).all()[0][0]
-                new_transaction = \
-                    Transaction(time=datetime.now(), amount=amount, account_id=account_id, stock_id=stock_id, transaction_type_id='2', shares=shares)
+                account_id = (
+                    db.session.query(Account.id)
+                    .filter(Account.username == session["user_id"])
+                    .limit(1)
+                    .all()[0][0]
+                )
+                stock_id = (
+                    db.session.query(Stock.id)
+                    .filter(Stock.symbol == stock)
+                    .limit(1)
+                    .all()[0][0]
+                )
+                new_transaction = Transaction(
+                    time=datetime.now(),
+                    amount=amount,
+                    account_id=account_id,
+                    stock_id=stock_id,
+                    transaction_type_id="2",
+                    shares=shares,
+                )
                 db.session.add(new_transaction)
 
                 # update users balance
                 updated_amount = check_remaining_cash(session["user_id"]) + amount
-                user = db.session.query(Account).filter(Account.username == session["user_id"]).one()
+                user = (
+                    db.session.query(Account)
+                    .filter(Account.username == session["user_id"])
+                    .one()
+                )
                 user.balance = updated_amount
 
                 # update the table ownership
-                user_owner = \
-                    db.session.query(Account.username).filter(Account.username == session["user_id"]).limit(1).all()[0][
-                        0]
+                user_owner = (
+                    db.session.query(Account.username)
+                    .filter(Account.username == session["user_id"])
+                    .limit(1)
+                    .all()[0][0]
+                )
 
                 amount_owned_stocks = check_stock_amount_owned(user_owner, stock)
+                # if user owns more stocks
                 if int(amount_owned_stocks) - int(shares) >= 1:
                     updated_amount = int(amount_owned_stocks) - int(shares)
-                    db.session.query(Ownership) \
-                        .filter(Ownership.account_id == Account.id) \
-                        .filter(Ownership.stock_id == Stock.id) \
-                        .filter(Stock.symbol == stock) \
-                        .filter(Account.username == session["user_id"]) \
-                        .update({'amount': updated_amount}, synchronize_session='fetch')
+                    db.session.query(Ownership).filter(
+                        Ownership.account_id == Account.id
+                    ).filter(Ownership.stock_id == Stock.id).filter(
+                        Stock.symbol == stock
+                    ).filter(
+                        Account.username == session["user_id"]
+                    ).update(
+                        {"amount": updated_amount}, synchronize_session="fetch"
+                    )
                 else:
-                    db.session.query(Ownership) \
-                        .filter(Ownership.account_id == Account.id) \
-                        .filter(Ownership.stock_id == Stock.id) \
-                        .filter(Stock.symbol == stock) \
-                        .filter(Account.username == session["user_id"]) \
-                        .delete(synchronize_session='fetch')
+                    # in case user sells all shares, revord in the table ownership is deleted
+                    db.session.query(Ownership).filter(
+                        Ownership.account_id == Account.id
+                    ).filter(Ownership.stock_id == Stock.id).filter(
+                        Stock.symbol == stock
+                    ).filter(
+                        Account.username == session["user_id"]
+                    ).delete(
+                        synchronize_session="fetch"
+                    )
                 flash("Sold!")
                 db.session.commit()
                 return redirect("/")
@@ -267,9 +351,22 @@ def sell():
 @app.route("/history", methods=["GET"])
 @login_required
 def history():
-    all_transactions = db.session.query(Stock.symbol, Stock.name, Stock.price, Transaction.time, TransactionType.type, Transaction.shares) \
-        .filter(Stock.id == Transaction.stock_id, Transaction.transaction_type_id == TransactionType.id,
-                Transaction.account_id == Account.id) \
-        .filter(Account.username == session["user_id"]) \
+    """Shows history of all transactions."""
+    all_transactions = (
+        db.session.query(
+            Stock.symbol,
+            Stock.name,
+            Stock.price,
+            Transaction.time,
+            TransactionType.type,
+            Transaction.shares,
+        )
+        .filter(
+            Stock.id == Transaction.stock_id,
+            Transaction.transaction_type_id == TransactionType.id,
+            Transaction.account_id == Account.id,
+        )
+        .filter(Account.username == session["user_id"])
         .all()
+    )
     return render_template("history.html", all_transactions=all_transactions)
