@@ -9,7 +9,7 @@
         <li><a href="#functionalities">Functionalities</a></li>
       </ul>    
     <li>
-      <a href="#what-have-i-learned">What Have I learned?</a>
+      <a href="#what-have-i-learned">What Have I Learned?</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -18,7 +18,6 @@
         <li><a href="#local-installation">Local installation</a></li>
       </ul>
     </li>
-    <li><a href="#roadmap--versions">Roadmap & Versions</a></li>
   </ol>
 
 
@@ -94,8 +93,3 @@ flask db upgrade
 flask run
 ```
 </details>
-
-<!-- ROADMAP -->
-## Roadmap & Versions
-
-Please note that this is **not** the final version. I'm currently working on the implementation of unit tests, so to be able to test out the endpoints on every pull request. Afterwards I plan to dockerize the application, so to make the installation proces smoother. I'd also like to automatically update database every minute, same as the stocks prices update on the market.  
