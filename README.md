@@ -15,7 +15,7 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#heroku">Heroku</a></li>        
-        <li><a href="#local-installation">Local installation</a></li>
+        <li><a href="#local-installation">Local Installation</a></li>
       </ul>
     </li>
   </ol>
