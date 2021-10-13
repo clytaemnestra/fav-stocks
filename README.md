@@ -35,7 +35,7 @@ Favourite stocks is an application which I've made for learning purposes. It's a
 * see history of transactions 
 * see all stocks
 
-## What Have I learned? 
+## What Have I Learned? 
 * how to set up a Flask app 
 * CRUD operations & database transactions in SQAlchemy
 * I've used type annotations for the first time
